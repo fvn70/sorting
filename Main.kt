@@ -3,7 +3,7 @@ package sorting
 import java.io.File
 import java.util.*
 
-val sc = Scanner(System.`in`)
+var sc = Scanner(System.`in`)
 var sortType = "natural"
 val sTypes = "natural,byCount"
 var dataType = "word"
@@ -41,6 +41,7 @@ fun main(args: Array<String>) {
         else -> "lines"
     }
 
+    if (inputFile.isNotBlank()) sc = Scanner(File(inputFile))
     if (outputFile.isNotBlank()) File(outputFile).writeText("")
     when (dataType) {
         "long" -> readNums()
@@ -50,31 +51,22 @@ fun main(args: Array<String>) {
 }
 
 fun readNums() {
-    val list = mutableListOf<String>()
-    if (inputFile.isNotBlank()) {
-        File(inputFile).forEachLine {
-            list.addAll(it.replace("[\\s]+".toRegex(), " ").split(" "))}
-    } else while (sc.hasNext()) {
-        while (sc.hasNext()) {
-            val num = sc.next()
-            if (num.matches("-?\\d+".toRegex())) {
-                list.add(num)
-            } else {
-                println("$num is not a long. It will be skipped.")
-            }
+    val list = mutableListOf<Int>()
+    while (sc.hasNext()) {
+        val num = sc.next()
+        if (num.matches("-?\\d+".toRegex())) {
+            list.add(num.toInt())
+        } else {
+            println("$num is not a long. It will be skipped.")
         }
     }
-    val ilist = list.toList().map { it.toInt() }.toMutableList()
-    ilist.sort()
-    sortData(ilist)
+    list.sort()
+    sortData(list)
 }
 
 fun readWords() {
     val list = mutableListOf<String>()
-    if (inputFile.isNotBlank()) {
-        File(inputFile).forEachLine {
-            list.addAll(it.replace("[\\s]+".toRegex(), " ").split(" "))}
-    } else while (sc.hasNext()) {
+    while (sc.hasNext()) {
         val ln = sc.next()
         list.add(ln)
     }
@@ -84,9 +76,7 @@ fun readWords() {
 
 fun readLines() {
     val list = mutableListOf<String>()
-    if (inputFile.isNotBlank()) {
-        File(inputFile).forEachLine { list.add(it) }
-    } else while (sc.hasNextLine()) {
+    while (sc.hasNextLine()) {
         val ln = sc.nextLine()
         list.add(ln)
     }
